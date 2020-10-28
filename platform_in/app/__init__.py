@@ -8,7 +8,7 @@ from confluent_kafka import avro
 from confluent_kafka.avro import AvroProducer
 import certifi
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 elastic_apm = ElasticAPM()
 
 success_response_object = {"status":"success"}
@@ -51,7 +51,7 @@ def create_app(script_info=None):
     # set up extensions
     elastic_apm.init_app(app)
 
-    value_schema = avro.load("avro/solarinverter.avsc")
+    value_schema = avro.load("avro/observation.avsc")
     avroProducer = AvroProducer(
         {
             "bootstrap.servers": app.config["KAFKA_BROKERS"],
@@ -76,25 +76,24 @@ def create_app(script_info=None):
     def hello_world():
         return jsonify(health="ok")
 
-    @app.route('/viikkisolar/observation', methods=['POST'])
-    def post_solarinverter_data():
+    @app.route('/observation', methods=['POST'])
+    def produce_observation_to_kafka():
         try:
             data = request.get_json()
-            data = json.loads(data)
-            #print(data)
             logging.debug(f"post observation: {data}")
-            #print("post data for solar inverter", data)
+            ##
+            # {topic:"",
+            # observation:""}
 
-            inverter_name = data["name"]
-            topic_prefix = "finest.viikkisolar"
-
-            topic = f"{topic_prefix}.{inverter_name}"
-            kafka_avro_produce(avroProducer, topic, data)
+            topic = data["topic"]
+            observations = data["observation"]
+            logging.debug(observations)
+            kafka_avro_produce(avroProducer, topic, observations)
             return success_response_object,success_code
 
         except Exception as e:
             avroProducer.flush()
-            print("solar inverter error", e)
+            print("kafka produce", e)
             return failure_response_object,failure_code
 
     return app
