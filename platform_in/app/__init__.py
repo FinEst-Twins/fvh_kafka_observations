@@ -8,7 +8,7 @@ from confluent_kafka import avro
 from confluent_kafka.avro import AvroProducer
 import certifi
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 elastic_apm = ElasticAPM()
 
 success_response_object = {"status":"success"}
