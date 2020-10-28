@@ -20,7 +20,7 @@ def delivery_report(err, msg):
     if err is not None:
         logging.error(f"Message delivery failed: {err}")
     else:
-        logging.debug(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+        logging.info(f"Message delivered to {msg.topic()} [{msg.partition()}]")
 
 def kafka_avro_produce(avroProducer, topic, data):
 
@@ -89,6 +89,7 @@ def create_app(script_info=None):
             observations = data["observation"]
             logging.debug(observations)
             kafka_avro_produce(avroProducer, topic, observations)
+            logging.info("produced")
             return success_response_object,success_code
 
         except Exception as e:
