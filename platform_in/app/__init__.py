@@ -11,16 +11,18 @@ import certifi
 logging.basicConfig(level=logging.INFO)
 elastic_apm = ElasticAPM()
 
-success_response_object = {"status":"success"}
+success_response_object = {"status": "success"}
 success_code = 202
-failure_response_object = {"status":"failure"}
+failure_response_object = {"status": "failure"}
 failure_code = 400
+
 
 def delivery_report(err, msg):
     if err is not None:
         logging.error(f"Message delivery failed: {err}")
     else:
-        logging.info(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+        logging.debug(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+
 
 def kafka_avro_produce(avroProducer, topic, data):
 
@@ -38,6 +40,7 @@ def kafka_avro_produce(avroProducer, topic, data):
         return False
 
     return True
+
 
 def create_app(script_info=None):
 
@@ -60,9 +63,9 @@ def create_app(script_info=None):
             "sasl.username": app.config["SASL_UNAME"],
             "sasl.password": app.config["SASL_PASSWORD"],
             "ssl.ca.location": certifi.where(),
-            #"debug": "security,cgrp,fetch,topic,broker,protocol",
+            # "debug": "security,cgrp,fetch,topic,broker,protocol",
             "on_delivery": delivery_report,
-            "schema.registry.url": app.config["SCHEMA_REGISTRY_URL"]
+            "schema.registry.url": app.config["SCHEMA_REGISTRY_URL"],
         },
         default_value_schema=value_schema,
     )
@@ -76,7 +79,7 @@ def create_app(script_info=None):
     def hello_world():
         return jsonify(health="ok")
 
-    @app.route('/observation', methods=['POST'])
+    @app.route("/observation", methods=["POST"])
     def produce_observation_to_kafka():
         try:
             data = request.get_json()
@@ -89,13 +92,11 @@ def create_app(script_info=None):
             observations = data["observation"]
             logging.debug(observations)
             kafka_avro_produce(avroProducer, topic, observations)
-            logging.info("produced")
-            return success_response_object,success_code
+            return success_response_object, success_code
 
         except Exception as e:
             avroProducer.flush()
-            print("kafka produce", e)
-            return failure_response_object,failure_code
+            logging.error("kafka produce", e)
+            return failure_response_object, failure_code
 
     return app
-
