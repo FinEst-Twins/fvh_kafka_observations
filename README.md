@@ -21,14 +21,14 @@ POST data example:
 {"topic": "topic",
  "observation": {
                     "phenomenontime_begin": 1606417048951,
-                    "phenomenontime_end": None,
+                    "phenomenontime_end": null,
                     "resulttime": 1606417048951,
                     "result": "1.0",
-                    "resultquality": None,
-                    "validtime_begin": None,
-                    "validtime_end": None,
-                    "parameters": None,
+                    "resultquality": null,
+                    "validtime_begin": null,
+                    "validtime_end": null,
+                    "parameters": null,
                     "datastream_id": 123,
-                    "featureofintrest_link": None,
+                    "featureofintrest_link": null,
                 }}
 ```
