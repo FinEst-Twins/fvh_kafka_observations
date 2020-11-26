@@ -6,7 +6,7 @@ Note: the environment variables file config.env must be at root folder and the s
 dev config (flask dev server):
 
     docker-compose up
-    send PUT requests to localhost:5000/viikkisolar/observation with solar inverter data
+    send PUT requests to localhost:5000/observation with solar inverter data
     should return success or failure response
 
 prod config (nginx+gunicorn)
@@ -18,30 +18,17 @@ prod config (nginx+gunicorn)
 
 POST data example:
 ```json
-{
-	"name": "Inv6",
-	"timestamp": "2020-04-20T17:56:50.093538",
-	"type": "Pico 10 solar inverter",
-	"VoltageString1": 0.0,
-	"CurrentString1": 0.0,
-	"OutputString1": 0,
-	"VoltageString2": 0.0,
-	"CurrentString2": 0.0,
-	"OutputString2": 0,
-	"VoltageString3": 0.0,
-	"CurrentString3": 0.0,
-	"OutputString3": 0,
-	"VoltagePhase1": 0.0,
-	"CurrentPhase1": 0.0,
-	"OutputPhase1": 0,
-	"VoltagePhase2": 0.0,
-	"CurrentPhase2": 0.0,
-	"OutputPhase2": 0,
-	"VoltagePhase3": 0.0,
-	"CurrentPhase3": 0.0,
-	"OutputPhase3": 0,
-	"TotalEnergy": 35731981,
-	"DailyEnery": 17118,
-	"Status": 0,
-	"Fault": 0
-}
+{"topic": "topic",
+ "observation": {
+                    "phenomenontime_begin": 1606417048951,
+                    "phenomenontime_end": None,
+                    "resulttime": 1606417048951,
+                    "result": "1.0",
+                    "resultquality": None,
+                    "validtime_begin": None,
+                    "validtime_end": None,
+                    "parameters": None,
+                    "datastream_id": 123,
+                    "featureofintrest_link": None,
+                }}
+```
