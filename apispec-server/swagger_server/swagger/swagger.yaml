@@ -1,0 +1,94 @@
+---
+swagger: "2.0"
+info:
+  description: "This API accepts observations in the sensor things compatible schema\
+    \ and produces it to Kafka"
+  version: "1.0.0"
+  title: "Observation API (Common/Internal)"
+  contact:
+    email: "sheena.puthanpurayil@forumvirium.fi"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/FinEst-Twins/Observations-To-Kafka/1.0.0"
+tags:
+- name: "Observations"
+schemes:
+- "https"
+paths:
+  /observation:
+    post:
+      tags:
+      - "Observations"
+      summary: "adds noise observations to UoP"
+      operationId: "observation_post"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "observation"
+        description: "Observations from Sensors"
+        required: false
+        schema:
+          $ref: "#/definitions/observation-data"
+      responses:
+        "201":
+          description: "item created"
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: "an existing item already exists"
+      x-swagger-router-controller: "swagger_server.controllers.observations_controller"
+definitions:
+  observation-data:
+    type: "object"
+    required:
+    - "topic"
+    properties:
+      topic:
+        type: "string"
+        example: "topic-name"
+      observation:
+        $ref: "#/definitions/observation"
+  observation:
+    required:
+    - "datastream_id"
+    - "featureofintrest_link"
+    - "parameters"
+    - "phenomenontime_begin"
+    - "phenomenontime_end"
+    - "result"
+    - "resultquality"
+    - "resulttime"
+    - "validtime_begin"
+    - "validtime_end"
+    properties:
+      phenomenontime_begin:
+        type: "integer"
+      phenomenontime_end:
+        type: "integer"
+        example: 1606417048951
+      resulttime:
+        type: "integer"
+        example: 1606417048951
+      result:
+        type: "string"
+        example: "12.2"
+      resultquality:
+        type: "string"
+      validtime_begin:
+        type: "integer"
+        example: 1606417048951
+      validtime_end:
+        type: "integer"
+        example: 1606417048951
+      parameters:
+        type: "string"
+      datastream_id:
+        type: "integer"
+        example: 134
+      featureofintrest_link:
+        type: "string"
