@@ -6,7 +6,7 @@ Note: the environment variables file config.env must be at root folder and the s
 dev config (flask dev server):
 
     docker-compose up
-    send PUT requests to localhost:5000/observation with solar inverter data
+    send POST requests to localhost:5000/observation with POST body format in the example below
     should return success or failure response
 
 prod config (nginx+gunicorn)
