@@ -9,7 +9,7 @@ from confluent_kafka.avro import AvroProducer
 import certifi
 
 logging.basicConfig(level=logging.INFO)
-elastic_apm = ElasticAPM()
+#elastic_apm = ElasticAPM()
 
 success_response_object = {"status": "success"}
 success_code = 202
@@ -52,7 +52,7 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
 
     # set up extensions
-    elastic_apm.init_app(app)
+    #elastic_apm.init_app(app)
 
     value_schema = avro.load("avro/observation.avsc")
     avroProducer = AvroProducer(

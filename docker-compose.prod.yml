@@ -12,7 +12,7 @@ services:
     expose:
       - 5003
     env_file:
-      - var.env
+      - aiven.env
     environment:
       - FLASK_APP=app/__init__.py
       - FLASK_ENV=production
