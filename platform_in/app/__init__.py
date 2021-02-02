@@ -63,7 +63,7 @@ def create_app(script_info=None):
             "sasl.username": app.config["SASL_UNAME"],
             "sasl.password": app.config["SASL_PASSWORD"],
             "ssl.ca.location": certifi.where(),
-            "debug": "security,cgrp,fetch,topic,broker,protocol",
+            #"debug": "security,cgrp,fetch,topic,broker,protocol",
             "on_delivery": delivery_report,
             "schema.registry.url": app.config["SCHEMA_REGISTRY_URL"],
         },
