@@ -54,7 +54,7 @@ def create_app(script_info=None):
     # set up extensions
     #elastic_apm.init_app(app)
 
-    value_schema = avro.load("avro/observation.avsc")
+    value_schema = avro.load("avro/observation2.avsc")
     avroProducer = AvroProducer(
         {
             "bootstrap.servers": app.config["KAFKA_BROKERS"],
