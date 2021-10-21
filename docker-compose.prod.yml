@@ -14,9 +14,7 @@ services:
     env_file:
       - aiven.env
     environment:
-      - FLASK_APP=app/__init__.py
-      - FLASK_ENV=production
-      - APP_SETTINGS=app.config.ProductionConfig
+      - LOG_LEVEL=2
 
   nginx:
     build: ./nginx

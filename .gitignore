@@ -4,3 +4,4 @@ env
 .vscode
 *.pem
 venv
+kafkacat

@@ -7,9 +7,14 @@ import json
 from confluent_kafka import avro
 from confluent_kafka.avro import AvroProducer
 import certifi
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
-logging.basicConfig(level=logging.INFO)
-#elastic_apm = ElasticAPM()
+if os.getenv("SENTRY_DSN"):
+    sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
+
+elastic_apm = ElasticAPM()
+
 
 success_response_object = {"status": "success"}
 success_code = 202
@@ -51,8 +56,10 @@ def create_app(script_info=None):
     app_settings = os.getenv("APP_SETTINGS")
     app.config.from_object(app_settings)
 
+    logging.basicConfig(level=app.config["LOG_LEVEL"])
+
     # set up extensions
-    #elastic_apm.init_app(app)
+    elastic_apm.init_app(app)
 
     value_schema = avro.load("avro/observation2.avsc")
     avroProducer = AvroProducer(
@@ -63,7 +70,7 @@ def create_app(script_info=None):
             "sasl.username": app.config["SASL_UNAME"],
             "sasl.password": app.config["SASL_PASSWORD"],
             "ssl.ca.location": certifi.where(),
-            #"debug": "security,cgrp,fetch,topic,broker,protocol",
+            # "debug": "security,cgrp,fetch,topic,broker,protocol",
             "on_delivery": delivery_report,
             "schema.registry.url": app.config["SCHEMA_REGISTRY_URL"],
         },
@@ -78,6 +85,10 @@ def create_app(script_info=None):
     @app.route("/")
     def hello_world():
         return jsonify(health="ok")
+
+    @app.route("/debug-sentry")
+    def trigger_error():
+        division_by_zero = 1 / 0
 
     @app.route("/observation", methods=["POST"])
     def produce_observation_to_kafka():
