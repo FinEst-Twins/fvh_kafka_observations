@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  observations_in_api:
+    build:
+        context: ./platform_in/
+        dockerfile: Dockerfile.prod
+    command: gunicorn --bind 0.0.0.0:5003 manage:app
+    volumes:
+      - ./platform_in/:/project/
+    expose:
+      - 5003
+    env_file:
+      - aiven.env
+    environment:
+      - LOG_LEVEL=2
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - observations_in_api
